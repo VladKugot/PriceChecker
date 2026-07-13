@@ -1,0 +1,34 @@
+.first-block {
+  margin: 50px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+
+  &__icon {
+    width: 100px;
+    height: 100px;
+    background-color: #f9ee23;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+
+  &__barcode {
+    width: 600px;
+    height: 200px;
+
+  }
+}
