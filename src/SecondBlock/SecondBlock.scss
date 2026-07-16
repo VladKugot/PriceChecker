@@ -1,0 +1,199 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 132deg;
+  inherits: false;
+}
+
+:root {
+  --accent-yellow: #f9ee23;
+  --bg-light: #f4f6f8;
+  --card-bg: #000000;
+  --text-dark: #1a1d20;
+  --text-muted: #6c757d;
+}
+
+.second-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  width: 100%;
+  background-color: var(--bg-light);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--text-dark);
+  padding: 24px;
+  box-sizing: border-box;
+
+  &__title {
+    font-size: 48px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--text-dark) 30%, #495057);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+  }
+
+  &__subtitle {
+    font-size: 21px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: -36px;
+    letter-spacing: 0.5px;
+  }
+
+  &__move-block {
+    position: relative;
+    width: 660px;
+    height: 300px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-sizing: border-box;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    isolation: isolate;
+
+    &::before {
+      content: "";
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      border-radius: 29px;
+      background-image: linear-gradient(
+        var(--rotate),
+        var(--accent-yellow),
+        #ffdd00,
+        #ff9e00,
+        var(--accent-yellow)
+      );
+      position: absolute;
+      z-index: 1;
+      top: -5px;
+      left: -5px;
+      animation: spin 3s linear infinite;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--card-bg);
+      border-radius: 24px;
+      z-index: 2;
+    }
+
+    .second-block__corner {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .second-block__corner--top-left {
+      top: 30px;
+      left: 30px;
+      border-top: 3px solid var(--accent-yellow);
+      border-left: 3px solid var(--accent-yellow);
+      border-top-left-radius: 10px;
+    }
+
+    .second-block__corner--top-right {
+      top: 30px;
+      right: 30px;
+      border-top: 3px solid var(--accent-yellow);
+      border-right: 3px solid var(--accent-yellow);
+      border-top-right-radius: 10px;
+    }
+
+    .second-block__corner--bottom-left {
+      bottom: 30px;
+      left: 30px;
+      border-bottom: 3px solid var(--accent-yellow);
+      border-left: 3px solid var(--accent-yellow);
+      border-bottom-left-radius: 10px;
+    }
+
+    .second-block__corner--bottom-right {
+      bottom: 30px;
+      right: 30px;
+      border-bottom: 3px solid var(--accent-yellow);
+      border-right: 3px solid var(--accent-yellow);
+      border-bottom-right-radius: 10px;
+    }
+  }
+
+  &__line {
+    position: absolute;
+    left: 36px;
+    right: 36px;
+    height: 3px;
+    background-color: var(--accent-yellow);
+    z-index: 3;
+    box-shadow:
+      0 0 12px var(--accent-yellow),
+      0 0 25px rgba(249, 238, 35, 0.8);
+    animation: scan 2.5s ease-in-out infinite;
+  }
+
+  &__input {
+    border: 2px solid #dee2e6;
+    background: #ffffff;
+    width: 480px;
+    height: 60px;
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-dark);
+    box-sizing: border-box;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+
+    &::placeholder {
+      color: #adb5bd;
+    }
+
+    &:hover {
+      border-color: #ced4da;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-yellow);
+      box-shadow: 0 0 20px rgba(249, 238, 35, 0.3);
+      background: #ffffff;
+    }
+  }
+}
+
+@keyframes scan {
+  0% {
+    top: 36px;
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% - 36px);
+    opacity: 0.3;
+  }
+}
+
+@keyframes spin {
+  0% {
+    --rotate: 0deg;
+  }
+  100% {
+    --rotate: 360deg;
+  }
+}

@@ -1,15 +1,109 @@
-import './App.css'
-import { FirstBlock } from './FirstBlock/FirstBlock'
-import { Header } from './Header/Header'
+import "./App.css";
+import { FirstBlock } from "./FirstBlock/FirstBlock";
+import { SecondBlock } from "./SecondBlock/SecondBlock";
+import { Header } from "./Header/Header";
+import { useEffect, useRef, useState } from "react";
+import { PriceBlock } from "./PriceBlock/PriceBlock";
+import { Spiner } from "./Spiner/Spiner";
 
 function App() {
+  const [activeBlock, setActiveBlock] = useState("first");
+  const [scannedBarcode, setScannedBarcode] = useState("");
+
+  const barcodeRef = useRef("");
+  const timeoutRef = useRef<number | null>(null);
+  const [time, setTime] = useState<number>(30);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const triggerLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const resetInactivityTimer = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(
+      () => {
+        setActiveBlock("first");
+        setScannedBarcode("");
+        triggerLoading();
+      },
+      100 * 60 * 1000,
+    );
+  };
+
+  useEffect(() => {
+    if (!scannedBarcode) return;
+
+    setTime(30);
+    setActiveBlock("second");
+    triggerLoading();
+
+    const countdownInterval = setInterval(() => {
+      setTime((prev) => {
+        if (prev > 1) {
+          return prev - 1;
+        } else {
+          clearInterval(countdownInterval);
+          triggerLoading();                 
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, [scannedBarcode]);
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      resetInactivityTimer();
+
+      if (event.key === "Enter") {
+        if (barcodeRef.current.trim() !== "") {
+          const finalCode = barcodeRef.current.trim();
+          setScannedBarcode(finalCode);
+          barcodeRef.current = "";
+        }
+      } else {
+        if (event.key.length === 1) {
+          barcodeRef.current += event.key;
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    resetInactivityTimer();
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   return (
     <>
-      <Header/>
+      <Header />
 
-      <FirstBlock />
+      <div className="main">
+        {isLoading ? (
+          <Spiner />
+        ) : activeBlock === "first" ? (
+          <FirstBlock />
+        ) : time > 0 ? (
+          <PriceBlock barcode={scannedBarcode} time={time} />
+        ) : (
+          <SecondBlock />
+        )}
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,25 @@
+
+#loading-container {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  overflow: hidden;
+}
+
+.loader-div {
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  border: 8px solid #5e5c1a;
+  border-radius: 50%;
+  border-top: 8px solid #f9ee23;
+  animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
