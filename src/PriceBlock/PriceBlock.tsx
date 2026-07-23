@@ -13,9 +13,10 @@ type Goods = {
 type Props = {
   item: Goods | null;
   time: number;
+  baseBarcode: string;
 };
 
-export const PriceBlock: React.FC<Props> = ({ item, time }) => {
+export const PriceBlock: React.FC<Props> = ({ item, time, baseBarcode }) => {
   const barcodeLines = useMemo(() => {
     const lines = [];
     const textToEncode = item?.barcode || "MEGAMARKET";
@@ -50,9 +51,9 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
         <div className="price-block__header">
           <h1
             className="price-block__title price-block__current-price"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: "flex", justifyContent: "center", lineHeight: "65px"}}
           >
-            Товар зі штрихкодом  не знайдено
+            Товар зі штрихкодом: {baseBarcode} не знайдено
           </h1>
         </div>
       </div>

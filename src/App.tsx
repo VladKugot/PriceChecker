@@ -24,6 +24,7 @@ function App() {
   };
 
   const getGoods = async (searchBarcode?: string) => {
+    setIsLoading(true);
     const codeToSearch = (searchBarcode || scannedBarcode) as string;
     if (!codeToSearch.trim()) return;
 
@@ -123,7 +124,7 @@ function App() {
         ) : activeBlock === "first" ? (
           <FirstBlock />
         ) : time > 0 ? (
-          <PriceBlock item={isItem} time={time} />
+          <PriceBlock item={isItem} time={time} baseBarcode={scannedBarcode} />
         ) : (
           <SecondBlock />
         )}
