@@ -29,7 +29,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/get-item?barcode=${encodeURIComponent(codeToSearch)}`,
+        `/get-item?barcode=${encodeURIComponent(codeToSearch)}`,
       );
 
       if (!response.ok) {
@@ -40,7 +40,7 @@ function App() {
 
       if (data.status === "success") {
         setItem(data);
-        console.log(data)
+        console.log(data);
       }
     } finally {
       setIsLoading(false);
