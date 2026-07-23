@@ -14,12 +14,37 @@ function App() {
   const timeoutRef = useRef<number | null>(null);
   const [time, setTime] = useState<number>(30);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isItem, setItem] = useState<any>(null);
 
   const triggerLoading = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
+  };
+
+  const getGoods = async (searchBarcode?: string) => {
+    const codeToSearch = (searchBarcode || scannedBarcode) as string;
+    if (!codeToSearch.trim()) return;
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/get-item?barcode=${encodeURIComponent(codeToSearch)}`,
+      );
+
+      if (!response.ok) {
+        throw new Error(`Помилка сервера: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        setItem(data);
+        console.log(data)
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const resetInactivityTimer = () => {
@@ -43,14 +68,14 @@ function App() {
     setTime(30);
     setActiveBlock("second");
     triggerLoading();
-
+    getGoods(scannedBarcode);
     const countdownInterval = setInterval(() => {
       setTime((prev) => {
         if (prev > 1) {
           return prev - 1;
         } else {
           clearInterval(countdownInterval);
-          triggerLoading();                 
+          triggerLoading();
           return 0;
         }
       });
@@ -97,7 +122,7 @@ function App() {
         ) : activeBlock === "first" ? (
           <FirstBlock />
         ) : time > 0 ? (
-          <PriceBlock barcode={scannedBarcode} time={time} />
+          <PriceBlock item={isItem} time={time} />
         ) : (
           <SecondBlock />
         )}
