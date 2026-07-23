@@ -44,7 +44,7 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
   }, [item?.barcode]);
 
   return (
-    item.status != "notGoods" ? (
+    item?.status != "notGoods" ? (
 <div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header">
@@ -103,7 +103,7 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
 <div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header ">
-          <h1 className="price-block__title price-block__current-price">Товар зі штрихкодом : {item.barcode} не знайдено</h1>
+          <h1 className="price-block__title price-block__current-price">Товар зі штрихкодом : {item?.barcode} не знайдено</h1>
         </div>
       </div>
 
