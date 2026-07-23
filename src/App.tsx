@@ -95,6 +95,7 @@ function App() {
           const finalCode = barcodeRef.current.trim();
           setScannedBarcode(finalCode);
           barcodeRef.current = "";
+          setItem(null);
         }
       } else {
         if (event.key.length === 1) {
