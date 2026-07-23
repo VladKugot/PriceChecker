@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./PriceBlock.scss";
 
 type Goods = {
@@ -6,7 +6,7 @@ type Goods = {
   barcode: string;
   name: string;
   price: string;
-  nds: string;
+  nds: number | string;
   measure: string;
 };
 
@@ -15,16 +15,11 @@ type Props = {
   time: number;
 };
 
-export const PriceBlock: React.FC<Props> = ({
-  item,
-  time,
-}) => {
-
-  const generateBarcodeLines = () => {
+export const PriceBlock: React.FC<Props> = ({ item, time }) => {
+  // Кешуємо генерацію ліній штрихкоду, щоб вони не перестворювалися при оновленні таймера `time`
+  const barcodeLines = useMemo(() => {
     const lines = [];
     const textToEncode = item?.barcode || "MEGAMARKET";
-
-    console.log(item, time)
 
     for (let i = 0; i < 45; i++) {
       const charCode = textToEncode.charCodeAt(i % textToEncode.length) || 65;
@@ -36,18 +31,18 @@ export const PriceBlock: React.FC<Props> = ({
 
       lines.push(
         <div
-          key={i}
+          key={`line-${i}`}
           className="barcode-line"
           style={{
             width: `${thickness}px`,
             marginRight: `${gap}px`,
             backgroundColor: isWhite ? "transparent" : "#000000",
           }}
-        />,
+        />
       );
     }
     return lines;
-  };
+  }, [item?.barcode]);
 
   return (
     <div className="price-block">
@@ -59,7 +54,9 @@ export const PriceBlock: React.FC<Props> = ({
 
         <div className="price-block__info">
           <div className="price-block__badge">Акція</div>
-          <p className="price-block__price-per-kg">{item?.price} грн / {item?.measure}</p>
+          <p className="price-block__price-per-kg">
+            {item?.price} грн / {item?.measure}
+          </p>
         </div>
 
         <div className="price-block__main">
@@ -71,9 +68,7 @@ export const PriceBlock: React.FC<Props> = ({
           </div>
 
           <div className="price-block__barcode-wrapper barcode-container">
-            <div className="barcode-lines-wrapper">
-              {generateBarcodeLines()}
-            </div>
+            <div className="barcode-lines-wrapper">{barcodeLines}</div>
             <p className="barcode-text">{item?.barcode || "PRICE CHECKER"}</p>
           </div>
         </div>
