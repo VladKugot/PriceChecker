@@ -27,39 +27,21 @@ function App() {
     const codeToSearch = (searchBarcode || scannedBarcode) as string;
     if (!codeToSearch.trim()) return;
 
-    setItem(null);
-
     try {
       const response = await fetch(
         `/get-item?barcode=${encodeURIComponent(codeToSearch)}`,
       );
 
       if (!response.ok) {
-        throw new Error(`Сервер повернув статус: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Отримано не JSON відповідь від сервера");
+        throw new Error(`Помилка сервера: ${response.status}`);
       }
 
       const data = await response.json();
 
-      if (data && data.status === "success") {
+      if (data.status === "success") {
         setItem(data);
-      } else {
-        setItem({
-          status: "notGoods",
-          barcode: codeToSearch,
-        });
+        console.log(data);
       }
-    } catch (error) {
-      console.error("Помилка під час отримання товару:", error);
-      
-      setItem({
-        status: "notGoods",
-        barcode: codeToSearch,
-      });
     } finally {
       setIsLoading(false);
     }

@@ -4,10 +4,10 @@ import "./PriceBlock.scss";
 type Goods = {
   status: string;
   barcode: string;
-  name: string;
-  price: string;
-  nds: number | string;
-  measure: string;
+  name?: string;
+  price?: string;
+  nds?: number | string;
+  measure?: string;
 };
 
 type Props = {
@@ -37,15 +37,14 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
             marginRight: `${gap}px`,
             backgroundColor: isWhite ? "transparent" : "#000000",
           }}
-        />
+        />,
       );
     }
     return lines;
   }, [item?.barcode]);
 
-  return (
-    item ? (
-<div className="price-block">
+  return item?.status != "notGoods" ? (
+    <div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header">
           <h1 className="price-block__title">{item?.name}</h1>
@@ -99,11 +98,13 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
         </div>
       </div>
     </div>
-    ) : (
-<div className="price-block">
+  ) : (
+    <div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header ">
-          <h1 className="price-block__title price-block__current-price">Товар з штрихкодом не знайдено</h1>
+          <h1 className="price-block__title price-block__current-price" style={{display: "flex", justifyContent:"center"}}>
+            Товар з штрихкодом: {item.barcode} не знайдено
+          </h1>
         </div>
       </div>
 
@@ -132,7 +133,5 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
         </div>
       </div>
     </div>
-    )
-    
   );
 };
