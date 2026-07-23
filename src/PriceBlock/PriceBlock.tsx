@@ -16,7 +16,6 @@ type Props = {
 };
 
 export const PriceBlock: React.FC<Props> = ({ item, time }) => {
-  // Кешуємо генерацію ліній штрихкоду, щоб вони не перестворювалися при оновленні таймера `time`
   const barcodeLines = useMemo(() => {
     const lines = [];
     const textToEncode = item?.barcode || "MEGAMARKET";
@@ -45,7 +44,8 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
   }, [item?.barcode]);
 
   return (
-    <div className="price-block">
+    item.status != "notGoods" ? (
+<div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header">
           <h1 className="price-block__title">{item?.name}</h1>
@@ -99,5 +99,40 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
         </div>
       </div>
     </div>
+    ) : (
+<div className="price-block">
+      <div className="price-block__card">
+        <div className="price-block__header ">
+          <h1 className="price-block__title price-block__current-price">Товар зі штрихкодом : {item.barcode} не знайдено</h1>
+        </div>
+      </div>
+
+      <div className="price-block__controls">
+        <button className="price-block__btn">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6m12-4a9 9 0 0 1-15 6.7L3 16" />
+          </svg>
+          Сканувати ще
+        </button>
+
+        <div className="price-block__timer-wrapper">
+          <p className="price-block__return">
+            Автоповернення через <span>{time}</span> сек
+          </p>
+          <div className="progress">
+            <div className="progress-value"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    )
+    
   );
 };
