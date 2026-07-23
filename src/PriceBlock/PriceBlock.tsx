@@ -11,7 +11,7 @@ type Goods = {
 };
 
 type Props = {
-  item: Goods;
+  item: Goods | null; // Додали | null для безпеки
   time: number;
 };
 
@@ -37,38 +37,56 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
             marginRight: `${gap}px`,
             backgroundColor: isWhite ? "transparent" : "#000000",
           }}
-        />,
+        />
       );
     }
     return lines;
   }, [item?.barcode]);
 
-  return item?.status != "notGoods" ? (
+  // Захист: якщо item взагалі null або undefined
+  if (!item) {
+    return (
+      <div className="price-block">
+        <div className="price-block__card">
+          <div className="price-block__header">
+            <h1 className="price-block__title price-block__current-price" style={{ display: "flex", justifyContent: "center" }}>
+              Пошук товару...
+            </h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Перевірка статусу
+  const isFound = item.status === "success";
+
+  return isFound ? (
     <div className="price-block">
       <div className="price-block__card">
         <div className="price-block__header">
-          <h1 className="price-block__title">{item?.name}</h1>
+          <h1 className="price-block__title">{item.name}</h1>
           <span className="price-block__weight">500 г</span>
         </div>
 
         <div className="price-block__info">
           <div className="price-block__badge">Акція</div>
           <p className="price-block__price-per-kg">
-            {item?.price} грн / {item?.measure}
+            {item.price} грн / {item.measure}
           </p>
         </div>
 
         <div className="price-block__main">
           <div className="price-block__prices">
-            <span className="price-block__old-price">{item?.price}</span>
+            <span className="price-block__old-price">{item.price}</span>
             <span className="price-block__current-price">
-              {item?.price} <small>грн</small>
+              {item.price} <small>грн</small>
             </span>
           </div>
 
           <div className="price-block__barcode-wrapper barcode-container">
             <div className="barcode-lines-wrapper">{barcodeLines}</div>
-            <p className="barcode-text">{item?.barcode || "PRICE CHECKER"}</p>
+            <p className="barcode-text">{item.barcode || "PRICE CHECKER"}</p>
           </div>
         </div>
       </div>
@@ -101,9 +119,12 @@ export const PriceBlock: React.FC<Props> = ({ item, time }) => {
   ) : (
     <div className="price-block">
       <div className="price-block__card">
-        <div className="price-block__header ">
-          <h1 className="price-block__title price-block__current-price" style={{display: "flex", justifyContent:"center"}}>
-            Товар з штрихкодом: {item.barcode} не знайдено
+        <div className="price-block__header">
+          <h1
+            className="price-block__title price-block__current-price"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            Товар зі штрихкодом: {item?.barcode} не знайдено
           </h1>
         </div>
       </div>
